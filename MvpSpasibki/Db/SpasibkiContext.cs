@@ -9,6 +9,7 @@ public sealed class SpasibkiContext : DbContext
 
     public SpasibkiContext()
     {
+        
         Database.EnsureCreated();
     }
 

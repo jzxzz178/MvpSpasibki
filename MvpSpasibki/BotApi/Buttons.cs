@@ -19,6 +19,22 @@ public static class Buttons
         return replyKeyboardMarkup;
     }
 
+    public static ReplyKeyboardMarkup GetEditButton()
+    {
+        var replyKeyboardMarkup = new ReplyKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                new KeyboardButton("Изменить спасибку"),
+                new KeyboardButton("Отправить спасибку")
+            }
+        })
+        {
+            ResizeKeyboard = true
+        };
+        return replyKeyboardMarkup;
+    }
+
     // public static InlineKeyboardMarkup GetInlineKeyboardWithDays()
     // {
     //     var inlineKeyboardDays = new InlineKeyboardMarkup(new[]

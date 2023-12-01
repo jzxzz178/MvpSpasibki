@@ -1,25 +1,20 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using System.Configuration;
 using MvpSpasibki.BotApi;
-using MvpSpasibki.Db;
+using System.Configuration;
+using System.Collections.Specialized;
 
 namespace MvpSpasibki;
 
 class Program
 {
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
-        // DbConnection.Start();
-        using var db = new SpasibkiContext();
-        var sp = new Spasibka("Коля", "Лера", "Спасибо за ручку");
-        db.Spasibki.Add(sp);
-        BotClient.Run();
-    }
-
-    public static IHostBuilder CreateHostBuilder(string[] args)
-    {
-        return Host.CreateDefaultBuilder().ConfigureServices((context, collection) =>
-        {
-            
-        });
+        var tokenReader = new StreamReader("BOT_API_TOKEN.txt");
+        var token = tokenReader.ReadLine();
+        Console.WriteLine(token);
+        
+        if (token == null) throw new ArgumentException($"Token was: {token}");
+        var botClient = new BotClient(token);
+        botClient.Run();
     }
 }
