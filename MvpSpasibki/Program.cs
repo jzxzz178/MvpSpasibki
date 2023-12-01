@@ -11,6 +11,7 @@ class Program
     {
         var tokenReader = new StreamReader("BOT_API_TOKEN.txt");
         var token = tokenReader.ReadLine();
+        tokenReader.Close();
         Console.WriteLine(token);
         
         if (token == null) throw new ArgumentException($"Token was: {token}");

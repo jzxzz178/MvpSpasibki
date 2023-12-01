@@ -9,20 +9,7 @@ public static class Writer
 
     static Writer()
     {
-        try
-        {
-            Wrtr = new StreamWriter("spasibki.txt", true, Encoding.UTF8);
-        }
-        catch (Exception e)
-        {
-            Wrtr?.Close();
-            Console.WriteLine($"Exception: {e}");
-            throw;
-        }
-        finally
-        {
-            Console.WriteLine("Writed new spasibka.");
-        }
+        Wrtr = new StreamWriter("spasibki.txt", true, Encoding.UTF8);
     }
 
     public static bool WriteSpasibka(string from, string to, string text)

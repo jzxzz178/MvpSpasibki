@@ -7,7 +7,9 @@ namespace MvpSpasibki.BotApi;
 
 public class BotClient
 {
-    private const long TestChatId = -4028109595;
+    private const long BinaryTeamChat = -962985837;
+    private const long Fiit2021Chat = -1560514257;
+    private const long TestChat = -4028109595;
 
     private readonly ITelegramBotClient bot;
 
@@ -51,7 +53,7 @@ public class BotClient
                 if (message?.Text == null)
                     break;
 
-                if (message.Chat.Id == TestChatId)
+                if (message.Chat.Id == TestChat) // CHAT ID
                 {
                     break;
                 }
@@ -72,7 +74,7 @@ public class BotClient
                         answers[message.Chat.Id] = new Dictionary<string, string> { { "from", "" } };
 
                         await botClient.SendTextMessageAsync(message.Chat,
-                            "Напиши свои имя и фамилию",
+                            "Напиши свои имя, фамилию и тег в телеграме (по желанию)",
                             cancellationToken: cancellationToken,
                             replyMarkup: null);
                         break;
@@ -101,7 +103,7 @@ public class BotClient
 
                         Writer.WriteSpasibka(spasibka["from"], spasibka["to"], spasibka["text"]);
 
-                        await botClient.SendTextMessageAsync(new ChatId(TestChatId),
+                        await botClient.SendTextMessageAsync(new ChatId(TestChat), // CHAT ID
                             "Нам прилетела новая спасибка!\n\n" +
                             $"От: {spasibka["from"]} (@{message.From?.Username})\n\n" +
                             $"Кому: {spasibka["to"]}\n\n" +
