@@ -10,11 +10,13 @@ public class BotClient
     private const long BinaryTeamChat = -962985837;
     private const long Fiit2021Chat = -1560514257;
     private const long TestChat = -4028109595;
+    private const long CurrChat = TestChat;
 
     private readonly ITelegramBotClient bot;
 
     // <id, <название этапа (from, to, text), ответ на этапе>>
     private static readonly Dictionary<long, Dictionary<string, string>> answers = new();
+
 
     public BotClient(string token)
     {
@@ -24,6 +26,7 @@ public class BotClient
     public void Run()
     {
         Console.WriteLine("Запущен бот " + bot.GetMeAsync().Result.FirstName);
+
 
         var cts = new CancellationTokenSource();
         var cancellationToken = cts.Token;
@@ -45,15 +48,24 @@ public class BotClient
     {
         // Некоторые действия
         // Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
+
         switch (update.Type)
         {
             case UpdateType.Message:
+                
+
                 var message = update.Message;
 
                 if (message?.Text == null)
                     break;
 
-                if (message.Chat.Id == TestChat) // CHAT ID
+                if (message.Chat.Id == CurrChat) // CHAT ID
+                {
+                    break;
+                }
+
+                var a = await botClient.GetChatMemberAsync(CurrChat, message.Chat.Id, cancellationToken: cancellationToken);
+                if (a.Status is ChatMemberStatus.Left or ChatMemberStatus.Kicked)
                 {
                     break;
                 }
@@ -62,7 +74,7 @@ public class BotClient
                 {
                     case "/start":
                         // var testChatId = new ChatId(TestChatId);
-                        // Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(testChatId));
+                        // Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(message));
 
                         await botClient.SendTextMessageAsync(message.Chat,
                             "Привет! Этот бот демонстрирует функционал новой фичи в фиитоботе",
@@ -103,7 +115,7 @@ public class BotClient
 
                         Writer.WriteSpasibka(spasibka["from"], spasibka["to"], spasibka["text"]);
 
-                        await botClient.SendTextMessageAsync(new ChatId(TestChat), // CHAT ID
+                        await botClient.SendTextMessageAsync(new ChatId(CurrChat), // CHAT ID
                             "Нам прилетела новая спасибка!\n\n" +
                             $"От: {spasibka["from"]} (@{message.From?.Username})\n\n" +
                             $"Кому: {spasibka["to"]}\n\n" +
