@@ -10,12 +10,12 @@ public class BotClient
     private const long BinaryTeamChat = -962985837;
     private const long Fiit2021Chat = -1560514257;
     private const long TestChat = -4028109595;
-    private const long CurrChat = TestChat;
+    private const long CurrChat = -745064939;
 
     private readonly ITelegramBotClient bot;
 
     // <id, <название этапа (from, to, text), ответ на этапе>>
-    private static readonly Dictionary<long, Dictionary<string, string>> answers = new();
+    private static readonly Dictionary<long, Dictionary<string, string>> Answers = new();
 
 
     public BotClient(string token)
@@ -83,7 +83,7 @@ public class BotClient
                         break;
 
                     case "изменить спасибку":
-                        answers[message.Chat.Id] = new Dictionary<string, string> { { "from", "" } };
+                        Answers[message.Chat.Id] = new Dictionary<string, string> { { "from", "" } };
 
                         await botClient.SendTextMessageAsync(message.Chat,
                             "Напиши свои имя, фамилию и тег в телеграме (по желанию)",
@@ -92,7 +92,7 @@ public class BotClient
                         break;
 
                     case "написать спасибку":
-                        answers[message.Chat.Id] = new Dictionary<string, string> { { "from", "" } };
+                        Answers[message.Chat.Id] = new Dictionary<string, string> { { "from", "" } };
 
                         await botClient.SendTextMessageAsync(message.Chat,
                             "Напиши свои имя и фамилию",
@@ -102,12 +102,12 @@ public class BotClient
 
                     case "отправить спасибку":
 
-                        if (!answers.ContainsKey(message.Chat.Id))
+                        if (!Answers.ContainsKey(message.Chat.Id))
                         {
                             break;
                         }
 
-                        var spasibka = answers[message.Chat.Id];
+                        var spasibka = Answers[message.Chat.Id];
                         if (spasibka.Keys.Count != 3)
                         {
                             break;
@@ -133,7 +133,7 @@ public class BotClient
 
 
                     default:
-                        if (answers.TryGetValue(message.Chat.Id, out var stage))
+                        if (Answers.TryGetValue(message.Chat.Id, out var stage))
                         {
                             switch (stage.Keys.Count)
                             {

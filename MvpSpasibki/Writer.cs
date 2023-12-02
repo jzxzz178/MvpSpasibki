@@ -25,12 +25,13 @@ public static class Writer
         catch (Exception e)
         {
             Console.WriteLine($"Exception: {e}");
+            Wrtr.Close();
             return false;
         }
 
         finally
         {
-            Wrtr.Close();
+            
         }
         
     }
