@@ -10,7 +10,7 @@ public class BotClient
     private const long BinaryTeamChat = -962985837;
     private const long Fiit2021Chat = -1560514257;
     private const long TestChat = -4028109595;
-    private const long CurrChat = -745064939;
+    private const long CurrChat = Fiit2021Chat;
 
     private readonly ITelegramBotClient bot;
 
