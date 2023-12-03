@@ -5,34 +5,17 @@ namespace MvpSpasibki;
 
 public static class Writer
 {
-    private static readonly StreamWriter Wrtr;
-
-    static Writer()
-    {
-        Wrtr = new StreamWriter("spasibki.txt", true, Encoding.UTF8);
-    }
-
     public static bool WriteSpasibka(string from, string to, string text)
     {
-        try
         {
-            Wrtr.WriteLine($"От: {from}");
-            Wrtr.WriteLine($"Кому: {to}");
-            Wrtr.WriteLine($"Текст: {text}");
-            Wrtr.WriteLine();
+            using (var wr = new StreamWriter("spasibki.txt", true, Encoding.UTF8))
+                wr.WriteLineAsync($"От: {from}\n" +
+                                  $"Кому: {to}\n" +
+                                  $"Текст: {text}\n")
+                    .Wait();
+
+            Console.WriteLine("Спасибка записана");
             return true;
         }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Exception: {e}");
-            Wrtr.Close();
-            return false;
-        }
-
-        finally
-        {
-            
-        }
-        
     }
 }
