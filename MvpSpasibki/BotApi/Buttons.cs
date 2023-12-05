@@ -14,7 +14,8 @@ public static class Buttons
             }
         })
         {
-            ResizeKeyboard = true
+            ResizeKeyboard = true,
+            OneTimeKeyboard = true, 
         };
         return replyKeyboardMarkup;
     }
@@ -30,7 +31,8 @@ public static class Buttons
             }
         })
         {
-            ResizeKeyboard = true
+            ResizeKeyboard = true,
+            OneTimeKeyboard = true
         };
         return replyKeyboardMarkup;
     }

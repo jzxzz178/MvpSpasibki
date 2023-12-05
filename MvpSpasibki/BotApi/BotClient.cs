@@ -10,7 +10,8 @@ public class BotClient
     private const long BinaryTeamChat = -962985837;
     private const long Fiit2021Chat = -1560514257;
     private const long TestChat = -4028109595;
-    private const long CurrChat = Fiit2021Chat;
+    private const long TestChat2 = -4018048128;
+    private const long CurrGroup = TestChat;
 
     private readonly ITelegramBotClient bot;
 
@@ -26,7 +27,6 @@ public class BotClient
     public void Run()
     {
         Console.WriteLine("Запущен бот " + bot.GetMeAsync().Result.FirstName);
-
 
         var cts = new CancellationTokenSource();
         var cancellationToken = cts.Token;
@@ -52,22 +52,43 @@ public class BotClient
         switch (update.Type)
         {
             case UpdateType.Message:
-                
 
                 var message = update.Message;
 
                 if (message?.Text == null)
                     break;
 
-                if (message.Chat.Id == CurrChat) // CHAT ID
+                if (message.Chat.Id == CurrGroup) // CHAT ID
                 {
                     break;
                 }
 
-                var a = await botClient.GetChatMemberAsync(CurrChat, message.Chat.Id, cancellationToken: cancellationToken);
-                if (a.Status is ChatMemberStatus.Left or ChatMemberStatus.Kicked)
+                try
                 {
-                    break;
+                    var user = await botClient.GetChatMemberAsync(CurrGroup, message.From!.Id,
+                        cancellationToken: cancellationToken);
+
+                    if (user.Status is ChatMemberStatus.Left or ChatMemberStatus.Kicked)
+                    {
+                        await botClient.SendTextMessageAsync(message.Chat,
+                            "Вас нет в нужном чате!",
+                            cancellationToken: cancellationToken);
+                        
+                        break;
+                    }
+
+                    // if (user.Status is ChatMemberStatus.Administrator or ChatMemberStatus.Creator)
+                    // {
+                    //     await botClient.SendTextMessageAsync(message.Chat,
+                    //         "Вы админ!",
+                    //         cancellationToken: cancellationToken,
+                    //         replyMarkup: Buttons.GetMainButton());
+                    // }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
                 }
 
                 switch (message.Text.ToLower())
@@ -86,7 +107,7 @@ public class BotClient
                         Answers[message.Chat.Id] = new Dictionary<string, string> { { "from", "" } };
 
                         await botClient.SendTextMessageAsync(message.Chat,
-                            "Напиши свои имя, фамилию и тег в телеграме (по желанию)",
+                            "Напишите свои имя, фамилию и тег в телеграме (по желанию)",
                             cancellationToken: cancellationToken,
                             replyMarkup: null);
                         break;
@@ -95,7 +116,7 @@ public class BotClient
                         Answers[message.Chat.Id] = new Dictionary<string, string> { { "from", "" } };
 
                         await botClient.SendTextMessageAsync(message.Chat,
-                            "Напиши свои имя и фамилию",
+                            "Напишите свои имя и фамилию",
                             cancellationToken: cancellationToken,
                             replyMarkup: null);
                         break;
@@ -115,7 +136,7 @@ public class BotClient
 
                         Writer.WriteSpasibka(spasibka["from"], spasibka["to"], spasibka["text"]);
 
-                        await botClient.SendTextMessageAsync(new ChatId(CurrChat), // CHAT ID
+                        await botClient.SendTextMessageAsync(new ChatId(CurrGroup), // CHAT ID
                             "Нам прилетела новая спасибка!\n\n" +
                             $"От: {spasibka["from"]} (@{message.From?.Username})\n\n" +
                             $"Кому: {spasibka["to"]}\n\n" +
@@ -139,7 +160,7 @@ public class BotClient
                             {
                                 case 0:
                                     await botClient.SendTextMessageAsync(message.Chat,
-                                        "Нажми на кнопу, чтобы попробовать новую фичу",
+                                        "Нажмите на кнопу, чтобы попробовать новую фичу",
                                         cancellationToken: cancellationToken,
                                         replyMarkup: Buttons.GetMainButton());
                                     break;
@@ -148,7 +169,7 @@ public class BotClient
                                     stage["from"] = message.Text;
                                     stage.Add("to", "");
                                     await botClient.SendTextMessageAsync(message.Chat,
-                                        "Напиши имя и фамилию человека, которого хочешь отблагодарить",
+                                        "Напишите имя и фамилию человека, которого хотите отблагодарить",
                                         cancellationToken: cancellationToken,
                                         replyMarkup: null);
                                     break;
@@ -157,7 +178,7 @@ public class BotClient
                                     stage["to"] = message.Text;
                                     stage.Add("text", "");
                                     await botClient.SendTextMessageAsync(message.Chat,
-                                        "Напиши за что хочешь отблагодарить этого человека",
+                                        "Напишите, за что хотите отблагодарить этого человека",
                                         cancellationToken: cancellationToken,
                                         replyMarkup: null);
                                     break;
